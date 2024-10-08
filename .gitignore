@@ -54,4 +54,3 @@ dkms.conf
 # VSCode CRunner config files
 .vscode/launch.json
 .vscode/tasks.json
-.vscode/launch.json
