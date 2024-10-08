@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/fresh/ENGG1410-Labs/lab3/lab3part4",
-      "program": "c:/fresh/ENGG1410-Labs/lab3/lab3part4/build/Debug/outDebug",
+      "cwd": "c:/fresh/ENGG-1410/lab4/lab4part2",
+      "program": "c:/fresh/ENGG-1410/lab4/lab4part2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
