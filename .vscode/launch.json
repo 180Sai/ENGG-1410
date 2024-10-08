@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "C:/Users/ericy/Documents/ENGG-1410/lab4/lab4part1",
-      "program": "C:/Users/ericy/Documents/ENGG-1410/lab4/lab4part1/build/Debug/outDebug",
+      "cwd": "c:/Users/ericy/Documents/ENGG-1410/lab4/lab4part4",
+      "program": "c:/Users/ericy/Documents/ENGG-1410/lab4/lab4part4/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

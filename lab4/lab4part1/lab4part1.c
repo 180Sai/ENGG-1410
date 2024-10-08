@@ -12,7 +12,7 @@ int main(void)
     printf("Enter the number of terms for pi approximation: ");
     scanf("%d", &termCount);
 
-    if (termCount > 0)
+    if (termCount < 0)
     {
         printf("The input is invalid.");
         return 0;
