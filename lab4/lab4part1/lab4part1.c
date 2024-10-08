@@ -3,7 +3,7 @@
 /**
  * 2024-10-08 ENGG-1410 Lab 4
  * Implements the series that estimates pi.
- * Calculates the value based on the number of terms.
+ * Calculates the value based on the number of terms (prompts user).
  */
 int main(void)
 {
@@ -11,6 +11,12 @@ int main(void)
     double pi = 0;
     printf("Enter the number of terms for pi approximation: ");
     scanf("%d", &termCount);
+
+    if (termCount > 0)
+    {
+        printf("The input is invalid.");
+        return 0;
+    }
 
     for (int i = 0; i <= termCount; i++)
     {
