@@ -24,7 +24,7 @@ int main(void)
     }
 
     pi *= 4;
-    printf("Estimated value of pi after %d terms: %.3f", termCount, pi);
+    printf("Estimated value of pi after %d terms: %f", termCount, pi);
 
     return 0;
 }
