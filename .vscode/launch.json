@@ -8,7 +8,7 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "${workspaceFolder}lab4/lab4part2",
+      "cwd": "${workspaceFolder}/lab4/lab4part2",
       "program": "${workspaceFolder}/lab4/lab4part2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
