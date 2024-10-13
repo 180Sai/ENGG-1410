@@ -1,11 +1,5 @@
 #include <stdbool.h>
 #include <stdio.h>
-
-/**
- * Prompts the user for a sequence of characters that create an arithmetic expression composed of summation.
- * (e.g. 1 + 2 + 3 + 5 - 3 - 2 - 10) The program validates that the sequence creates a proper expression.
- *
- */
 int main(void)
 {
     char userChar;
@@ -30,22 +24,13 @@ int main(void)
             while (userChar != '+' && userChar != '-')
             {
                 printf("Invalid! Re-enter sign.\n");
-                scanf("%c", &userChar);
+                scanf(" %c", &userChar);
             }
             sign = (userChar == '+') ? 1 : -1;
             number = true;
         }
         scanf(" %c", &userChar);
     } while (sum >= 0);
-
-    if (sum < 0)
-    {
-        printf("Sum fell below zero.\n");
-    }
-    else
-    {
-        printf("The sum is %d.", sum);
-    }
-
+    printf("Sum fell below zero.\n");
     return 0;
 }
