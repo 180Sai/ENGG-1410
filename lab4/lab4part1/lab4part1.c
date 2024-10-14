@@ -9,14 +9,15 @@ int main(void)
 {
     int termCount;
     double pi = 0;
-    printf("Enter the number of terms for pi approximation: ");
-    scanf("%d", &termCount);
+    
+    do {
+        printf("Enter the number of terms for pi approximation: ");
+        scanf("%d", &termCount);
 
-    if (termCount < 0)
-    {
-        printf("The input is invalid.");
-        return 0;
-    }
+        if (termCount < 0)
+            printf("The input is invalid.");
+        
+    } while (termCount < 0);
 
     for (int i = 0; i <= termCount; i++)
     {
