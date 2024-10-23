@@ -24,7 +24,6 @@ int convertToFromBase10(int n, int b, int istoTen)
         int digit = n % b;
         n /= b;
         nResult += digit * (int)pow(b2, power);
-        ;
     }
 
     return nResult;
