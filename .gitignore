@@ -56,3 +56,6 @@ dkms.conf
 .vscode/launch.json
 .vscode/settings.json
 .vscode/tasks.json
+
+# Visual Studio config files
+.vs/*
