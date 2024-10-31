@@ -1,4 +1,17 @@
 #pragma once
 #include <stdio.h>
 
-void updateScore(char winner) {}
+int updateScore(char winner)
+{
+    static int x = 0;
+    static int y = 0;
+
+    if (winner == 'X')
+    {
+        x++;
+        return x;
+    }
+
+    y++;
+    return y;
+}
