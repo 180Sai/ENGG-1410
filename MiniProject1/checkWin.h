@@ -3,6 +3,7 @@
 
 int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
 {
+    // check horizontal lines
     for (int i = 0; i < size; i++)
     {
         for (int j = 1; j < size; j++)
@@ -15,6 +16,7 @@ int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
         }
     }
 
+    // check vertical lines
     for (int i = 0; i < size; i++)
     {
         for (int j = 1; j < size; j++)
@@ -28,6 +30,7 @@ int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
         }
     }
 
+    // diagonal
     for (int i = 0; i < size; i++)
     {
         if (board[i][i] == ' ')
@@ -38,6 +41,7 @@ int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
             return 1;
     }
 
+    // reverse diagonal
     for (int i = size - 1; i >= 0; i--)
     {
         if (board[i][i] == ' ')
@@ -47,5 +51,6 @@ int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
         if (i == 0)
             return 1;
     }
+
     return 0;
 }
