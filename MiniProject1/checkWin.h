@@ -1,55 +1,47 @@
 #pragma once
 #include "globalVar.h"
 
+//return 0 for no win
+//return 1 for O win
+//return 2 for X win
 int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
 {
-    // check horizontal lines
-    for (int i = 0; i < size; i++)
+    for (int row = 0; row < size; row++)
     {
-        for (int j = 1; j < size; j++)
+        for (int col = 1; col < size; col++)
         {
-            if (board[i][j] != ' ')
-                if (board[i][j] == board[i][0])
-                    break;
-            if (j == size - 1)
-                return 1;
+            if (board[row][col] == ' ' || board[row][col] != board[row][0])
+                break;
+            if (col == size - 1)                      //if j is at end, this means that row is vaild
+                return board[row][0] == 'O' ? 1:2;
         }
     }
 
-    // check vertical lines
-    for (int i = 0; i < size; i++)
+    for (int col = 0; col < size; col++)
     {
-        for (int j = 1; j < size; j++)
+        for (int row = 1; row < size; row++)
         {
-            if (board[j][i] != ' ')
-                if (board[j][i] == board[0][i])
-                    break;
-
-            if (j == size - 1)
-                return 1;
+            if (board[row][col] == ' ' || board[row][col] != board[0][col])
+                break;
+            if (row == size - 1)                      //if j is at end, this means that col is vaild
+                return board[0][col] == 'O' ? 1:2;
         }
     }
 
-    // diagonal
-    for (int i = 0; i < size; i++)
+    for(int i = 0; i < size; i++)
     {
-        if (board[i][i] == ' ')
+        if (board[i][i] == ' ' || board[i][i] != board[0][0])
             break;
-        if (board[i][i] != board[i][0])
-            break;
-        if (i == size - 1)
-            return 1;
+        if(i == size-1)
+            return board[0][0] == 'O' ? 1:2;
     }
 
-    // reverse diagonal
-    for (int i = size - 1; i >= 0; i--)
+    for(int i = 0; i < size; i++)
     {
-        if (board[i][i] == ' ')
+        if (board[i][size-i-1] == ' ' || board[i][size-i-1] != board[0][size-1])
             break;
-        if (board[i][i] != board[i][size - 1])
-            break;
-        if (i == 0)
-            return 1;
+        if(i == size-1)
+            return board[0][size-1] == 'O' ? 1:2;
     }
 
     return 0;

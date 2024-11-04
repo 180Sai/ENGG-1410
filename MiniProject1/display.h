@@ -1,27 +1,19 @@
 #pragma once
 #include "globalVar.h"
 
-void printBoard(char board[MAX_SIZE][MAX_SIZE], int size)
-{
-    printf("\e[1;1H\e[2J"); // clear all characters in terminal starting from first character
+void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
+    // printf("\e[0;0H\e[2J");
 
-    // add two lines for every row in grid
-    for (int i = 0; i < size; i++)
-    {
-        for (int j = 0;
-             j < (size * 3) // add three hyphens for every character in row,
-                     + (size - 1);
-             j++) // plus three lines
-        {
-            if (!i)
-                break;   // do not print first line
-            printf("-"); // horizontal lines (no detail)
+    for (int row = 0; row < size; row++) {
+        printf("\n %c ", board[row][0]);
+        for (int col = 1; col < size - 1; col++) {
+            printf("| %c ", board[row][col]);
         }
+        printf("|");
+        printf(" %c ", board[row][size - 1]);
 
-        printf("\n %c", board[i][0]); // goes to next line, starts character on horizontal line
-        for (int j = 1; j < size - 1; j++)
-            printf(" | %c", board[i][j]); // horizontal lines that half detail
-
-        printf(" | %c \n", board[i][size - 1]); // ending character on horizontal line, goes to next line
+        printf("\n");
+        if (row < size - 1) for (int i = 0; i < (size * 3) + (size - 1); i++) printf("-");
     }
+    printf("\n");
 }
