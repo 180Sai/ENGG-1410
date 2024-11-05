@@ -1,5 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #define MAX_SIZE 10
+
+// checks 
+int checkWin(char [MAX_SIZE][MAX_SIZE], int);
+int checkDraw(char [MAX_SIZE][MAX_SIZE], int);
+
+void updateScore(char);
+void printBoard(char [MAX_SIZE][MAX_SIZE], int);
+void playerMove(char [MAX_SIZE][MAX_SIZE], int, char);
+void aiMove(char [MAX_SIZE][MAX_SIZE], int);
+void initializeBoard(char [MAX_SIZE][MAX_SIZE], int);
 
 int main(void)
 {
@@ -9,25 +21,30 @@ int main(void)
 
     int win = 0;
 
-    while(1)
-    {
-        // prompt user for size 
-        if (!size)
-        {
-            printf("what size grid would you like to play on (3-10): ");
-            scanf("%d", &size);
-            if(size < 3 || size > 10) size = 0; // reset size value if invalid
+    // prompt user for the size of the board
+    do {
+        printf("input the size of the grid you would like to play on (from 3 to 10): ");
+        scanf("%d", &size);
 
-            continue; // keep skipping thru code until a valid input is received
+        // number is invalid - reset
+        if (size < 3 || size > 10) {
+            printf("%d is an invalid number\n\n", size);
+            size = 0;
         }
-        
+    } while (size == 0);
+
+    // repeatedly ask player to play game (unless $ is input)
+    while (1)
+    {
         // prompt player to decide whether to play against CPU or themselves 
-        printf("Choose who to play against: \n\t\
-            1. A player \n\t\
-            2. The Computer\n");
+        printf("Choose who to play against: \n\
+        1 - Local player \n\
+        2 - AI\n\
+        3 - Exit program");
         scanf("%d", &opponent);
         
-        // 
+        if (opponent == 3) break; // exit program
+
         if (opponent < 0 || opponent > 2)
             printf("\033[31mINVALID INPUT\033[0m\n");
         else if(opponent == 2)
@@ -66,7 +83,7 @@ int main(void)
                 printf("%c wins this game.\n", 'X');
             else 
                 printf("no one wins.");
-            printf("%s wins this game\n", (win == 1 ? "O" : (win == 0 ? "no one" : "X")));
+            // printf("%s wins this game\n", (win == 1 ? "O" : (win == 0 ? "no one" : "X")));
         }
     }
 
@@ -87,8 +104,70 @@ int main(void)
 3 1
 */
 
-void AIMove(int *x, int *y) {
-    
+// when CPU is controlling the O's - if there is a one-step winning move it is played, otherwise it is played at random
+void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
+    int blockX = -1, blockY = -1; // rolling block - prioritize a winning > blocking move
+
+    for (int r = 0; r < size; r++) { // check if an ally or rivalling row is full minus one
+        int x = -1, y = -1; // determine occupying character and the absent cell location
+        char occupant = '\0';
+
+        for (int c = 0; c < size; c++) {
+            if (board[r][c] == ' ') // case 1: empty cell
+                if (x == -1) { // first empty cell
+                    x = r;
+                    y = c;
+                } else { // second empty cell - no action
+                    x = -1;
+                    break;
+                } 
+            else { // case 2: occupied cell
+                if (occupant == '\0') occupant = board[r][c]; // first filled cell - assign as row occupation
+                else if (occupant != board[r][c]) { // conflicted row - no action
+                    x = -1;
+                    break;
+                } // continue if cell matches row occupation
+            }
+        }
+
+        if (x != -1 && occupant == 'X') { // winning move
+            board[x][y] = 'X';
+            return;
+        } else if (x != -1 && occupant == 'O') { // blocking move (save for later)
+            blockX = x, blockY = y;
+        }
+
+    }
+
+    // check if an ally or rivalling column is full minus one
+    for (int c = 0; c < size; c++) {
+        // determine occupant character and the absent cell location
+        int x = -1, y = -1;
+        char occupant = '\0';
+        
+        for (int r = 0; r < size; r++) {
+            if (board[r][c] == ' ') {
+                x = r;
+                y = c;
+            } else {
+                x = -1;
+                break;
+            }
+        }
+    }
+
+    // NO WINNING MOVES FOUND - list all the possible places for the AI to move
+    int available[99][2];
+
+    // check the entire board for possible places to play
+    int availI = 0;
+    for (int row = 0; row < size; row++) for (int col = 0; col < size; col++) {
+        if (board[row][col] == ' ') { // empty cell
+            available[availI][0] = row;
+            available[availI][1] = col;
+            availI++;
+        }
+    }
 }
 
 // returns 0 (no win), 1 (win for O), 2 (win for X)
@@ -139,6 +218,7 @@ int checkWin(char board[MAX_SIZE][MAX_SIZE], int size)
     return 0;
 }
 
+// displays board/grid to terminal
 void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
     // printf("\e[0;0H\e[2J");
 
@@ -159,10 +239,11 @@ void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
     printf("\n");
 }
 
+// check if all rows, columns have been filled (draw state)
 int checkDraw(char board[MAX_SIZE][MAX_SIZE], int size)
 {
-    for(int row = 0; row < size; row++) for (int col = 0; col < size; col++) 
-        if(board[row][col] == ' ') return 0;
+    for (int row = 0; row < size; row++) for (int col = 0; col < size; col++) 
+        if (board[row][col] == ' ') return 0;
     return 1;
 }
 
@@ -177,10 +258,32 @@ void playerMove(char board[MAX_SIZE][MAX_SIZE], int size, char player)
         scanf("%d %d", &x, &y);
 
         if (x > size || x < 1) printf("row position is out of bounds.\n");
-        if (y > size || y < 1) printf("column position is out of bounds.\n");
-        if (board[x - 1][y - 1] == ' ') printf("cell is already filled.\n");
+        else if (y > size || y < 1) printf("column position is out of bounds.\n");
+        else if (board[x - 1][y - 1] != ' ') printf("cell is already filled.\n");
         else isValid = 1;
     }
 
     board[x - 1][y - 1] = player;
+}
+
+void initializeBoard(char board[MAX_SIZE][MAX_SIZE], int size)
+{
+    for (int i = 0; i < size; i++) for (int j = 0; j < size; j++)
+            board[i][j] = ' ';
+}
+
+void updateScore(char winner)
+{
+    static int x = 0;
+    static int y = 0;
+
+    if (winner == 'X')
+    {
+        x++;
+        printf("X score: %d", ++x);
+        return;
+    }
+
+    y++;
+    printf("Y score: %d", ++y);
 }
