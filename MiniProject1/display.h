@@ -5,6 +5,7 @@ void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
     // printf("\e[0;0H\e[2J");
 
     for (int row = 0; row < size; row++) {
+        // print columns in row
         printf("\n %c ", board[row][0]);
         for (int col = 1; col < size - 1; col++) {
             printf("| %c ", board[row][col]);
@@ -13,6 +14,8 @@ void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
         printf(" %c ", board[row][size - 1]);
 
         printf("\n");
+
+        // add lines to separate rows from each other
         if (row < size - 1) for (int i = 0; i < (size * 3) + (size - 1); i++) printf("-");
     }
     printf("\n");

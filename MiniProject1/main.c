@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "display.h"
 #include "init.h"
 #include "playerMove.h"
@@ -18,7 +16,7 @@ int main(void)
         if (!size)
         {
             printf("what size grid would you like to play on (3-10): ");
-            scanf("%d",&size);
+            scanf("%d", &size);
             if(size < 3 || size > 10)
                 size = 0;
             continue;
@@ -30,12 +28,11 @@ int main(void)
         if (opponent < 0 || opponent > 2)
             printf("\033[31mINVALID INPUT\033[0m\n");
         
-        if(opponent == 2)
+        else if(opponent == 2)
         {
-            printf("The computer is mad try agin latter");
+            printf("The computer is mad try again later");
             continue;
         }
-
         else
         {
             initializeBoard(board, size);
@@ -61,10 +58,8 @@ int main(void)
                 if(win) break;
             }
 
-            printf("%s wins this game\n", win == 1 ? 'O':(win == 0 ? "no one":'X'));
+            printf("%s wins this game\n", (win == 1 ? "O" : (win == 0 ? "no one" : "X")));
         }
-
-
     }
 
     return 0;
