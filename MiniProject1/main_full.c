@@ -78,9 +78,9 @@ int main(void)
             }
 
             if (win == 1) 
-                printf("%c wins this game.\n", 'O');
+                printf("%col wins this game.\n", 'O');
             else if (win == 2)
-                printf("%c wins this game.\n", 'X');
+                printf("%col wins this game.\n", 'X');
             else 
                 printf("no one wins.");
             // printf("%s wins this game\n", (win == 1 ? "O" : (win == 0 ? "no one" : "X")));
@@ -104,26 +104,26 @@ int main(void)
 3 1
 */
 
-// when CPU is controlling the O's - if there is a one-step winning move it is played, otherwise it is played at random
+// when CPU is controlling the X's - if there is a one-step winning move it is played, otherwise it is played at random
 void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
     int blockX = -1, blockY = -1; // rolling block - prioritize a winning > blocking move
 
-    for (int r = 0; r < size; r++) { // check if an ally or rivalling row is full minus one
+    for (int row = 0; row < size; row++) { // check if an ally or rivalling row is full minus one
         int x = -1, y = -1; // determine occupying character and the absent cell location
         char occupant = '\0';
 
-        for (int c = 0; c < size; c++) {
-            if (board[r][c] == ' ') // case 1: empty cell
+        for (int col = 0; col < size; col++) {
+            if (board[row][col] == ' ') // case 1: empty cell
                 if (x == -1) { // first empty cell
-                    x = r;
-                    y = c;
+                    x = row;
+                    y = col;
                 } else { // second empty cell - no action
                     x = -1;
                     break;
                 } 
             else { // case 2: occupied cell
-                if (occupant == '\0') occupant = board[r][c]; // first filled cell - assign as row occupation
-                else if (occupant != board[r][c]) { // conflicted row - no action
+                if (occupant == '\0') occupant = board[row][col]; // first filled cell - assign as row occupation
+                else if (occupant != board[row][col]) { // conflicted row - no action
                     x = -1;
                     break;
                 } // continue if cell matches row occupation
@@ -140,15 +140,15 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
     }
 
     // check if an ally or rivalling column is full minus one
-    for (int c = 0; c < size; c++) {
+    for (int col = 0; col < size; col++) {
         // determine occupant character and the absent cell location
         int x = -1, y = -1;
         char occupant = '\0';
         
-        for (int r = 0; r < size; r++) {
-            if (board[r][c] == ' ') {
-                x = r;
-                y = c;
+        for (int row = 0; row < size; row++) {
+            if (board[row][col] == ' ') {
+                x = row;
+                y = col;
             } else {
                 x = -1;
                 break;
@@ -224,12 +224,12 @@ void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
 
     for (int row = 0; row < size; row++) {
         // print columns in row
-        printf("\n %c ", board[row][0]);
+        printf("\n %col ", board[row][0]);
         for (int col = 1; col < size - 1; col++) {
-            printf("| %c ", board[row][col]);
+            printf("| %col ", board[row][col]);
         }
         printf("|");
-        printf(" %c ", board[row][size - 1]);
+        printf(" %col ", board[row][size - 1]);
 
         printf("\n");
 
