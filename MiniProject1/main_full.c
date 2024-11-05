@@ -40,7 +40,7 @@ int main(void)
         printf("Choose who to play against: \n\
         1 - Local player \n\
         2 - AI\n\
-        3 - Exit program");
+        3 - Exit program\n");
         scanf("%d", &opponent);
         
         if (opponent == 3) break; // exit program
@@ -49,8 +49,36 @@ int main(void)
             printf("\033[31mINVALID INPUT\033[0m\n");
         else if(opponent == 2)
         {
-            printf("The computer is mad try again later");
-            continue;
+            initializeBoard(board, size);
+            for(int i = 1; i < (size*size)+1; i++)
+            {
+                //for player O
+                printBoard(board, size);
+                playerMove(board, size, 'O');
+                printBoard(board, size);
+
+                win = checkWin(board, size);
+                if(win) break;
+
+
+                if(i == (size*size)) break;
+
+                //for CPU player X
+                aiMove(board, size);
+                i++;
+                
+                win = checkWin(board, size);
+                if(win) break;
+            }
+
+            if (win == 1) {
+                printf("%c wins this game.\n", 'O');
+                updateScore('O');
+            } else if (win == 2) {
+                printf("%c wins this game.\n", 'X');
+                updateScore('X');
+            } else 
+                printf("no one wins.\n");
         }
         else
         {
@@ -77,12 +105,14 @@ int main(void)
                 if(win) break;
             }
 
-            if (win == 1) 
-                printf("%col wins this game.\n", 'O');
-            else if (win == 2)
-                printf("%col wins this game.\n", 'X');
-            else 
-                printf("no one wins.");
+            if (win == 1) {
+                printf("%c wins this game.\n", 'O');
+                updateScore('O');
+            } else if (win == 2) {
+                printf("%c wins this game.\n", 'X');
+                updateScore('X');
+            } else 
+                printf("no one wins.\n");
             // printf("%s wins this game\n", (win == 1 ? "O" : (win == 0 ? "no one" : "X")));
         }
     }
@@ -136,7 +166,6 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
         } else if (x != -1 && occupant == 'O') { // blocking move (save for later)
             blockX = x, blockY = y;
         }
-
     }
 
     // check if an ally or rivalling column is full minus one
@@ -154,9 +183,67 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
                 break;
             }
         }
+
+        if (x != -1 && occupant == 'X') { // winning
+            board[x][y] = 'X';
+            return;
+        } else if (x != -1 && occupant == 'O') { // blocking
+            blockX = x, blockY = y;
+        }
     }
 
-    // NO WINNING MOVES FOUND - list all the possible places for the AI to move
+    // check if an ally or rivalling diagonal is full minus one
+    int diagX = -1, diagY = -1;
+    char diagOccupant = '\0';
+    for (int i = 0; i < size; i++) {
+        if (board[i][i] == ' ') {
+            if (diagX == -1) diagX = i, diagY = i; // found empty cell
+            else { // more than one empty - no action
+                diagX = -1;
+                break;
+            }
+        } else {
+            if (diagOccupant == '\0') diagOccupant = board[i][i]; // occupying char found
+            else if (diagOccupant != board[i][i]) { // conflict - no action
+                diagX = -1;
+                break;
+            }
+        }
+    }
+
+    if (diagX != -1 && diagOccupant == 'X') { // winning
+        board[diagX][diagY] = 'X';
+        return;
+    } else if (diagX != -1 && diagOccupant == 'O') blockX = diagX, blockY = diagY; // blocking
+
+    // check if an ally or rivalling reverse diagonal is full minus one
+    diagX = -1, diagY = -1;
+    diagOccupant = '\0';
+    for (int i = 0; i < size; i++) {
+        if (board[size-i-1][size-i-1] == ' ') {
+            if (diagX == -1) diagX = size-i-1, diagY = size-i-1;
+            else {
+                diagX = -1;
+                break;
+            }
+        } else {
+            if (diagOccupant == '\0') diagOccupant = board[size-i-1][size-i-1];
+            else if (diagOccupant != board[size-i-1][size-i-1]) {
+                diagX = -1;
+                break;
+            }
+        }
+    }
+
+    if (diagX != -1 && diagOccupant == 'X') {
+        board[diagX][diagY] = 'X';
+        return;
+    } else if (diagX != -1 && diagOccupant == 'O') blockX = diagX, blockY = diagY;
+
+    // NO WINNING MOVES FOUND - check if blocking move was found
+    if (diagX != -1) board[blockX][blockY] = 'X';
+
+    // NO WINNING OR BLOCKING MOVES FOUND - list all the possible places for the AI to move
     int available[99][2];
 
     // check the entire board for possible places to play
@@ -168,6 +255,11 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
             availI++;
         }
     }
+
+    unsigned int seed = (unsigned int) time(NULL); srand(seed);
+    int randI = rand() % (availI + 1);
+    
+    board[available[randI][0]][available[randI][1]] = 'X';
 }
 
 // returns 0 (no win), 1 (win for O), 2 (win for X)
@@ -224,12 +316,12 @@ void printBoard(char board[MAX_SIZE][MAX_SIZE], int size) {
 
     for (int row = 0; row < size; row++) {
         // print columns in row
-        printf("\n %col ", board[row][0]);
+        printf("\n %c ", board[row][0]);
         for (int col = 1; col < size - 1; col++) {
-            printf("| %col ", board[row][col]);
+            printf("| %c ", board[row][col]);
         }
         printf("|");
-        printf(" %col ", board[row][size - 1]);
+        printf(" %c ", board[row][size - 1]);
 
         printf("\n");
 
@@ -275,15 +367,9 @@ void initializeBoard(char board[MAX_SIZE][MAX_SIZE], int size)
 void updateScore(char winner)
 {
     static int x = 0;
-    static int y = 0;
+    static int o = 0;
 
-    if (winner == 'X')
-    {
-        x++;
-        printf("X score: %d", ++x);
-        return;
-    }
+    (winner == 'x') ? x++ : o++;
 
-    y++;
-    printf("Y score: %d", ++y);
+    printf("X score: %d\nO score: %d\n\n", x, o);
 }
