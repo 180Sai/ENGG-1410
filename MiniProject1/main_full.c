@@ -170,17 +170,25 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
 
     // check if an ally or rivalling column is full minus one
     for (int col = 0; col < size; col++) {
-        // determine occupant character and the absent cell location
+        // occupant character and the absent cell location
         int x = -1, y = -1;
         char occupant = '\0';
         
         for (int row = 0; row < size; row++) {
-            if (board[row][col] == ' ') {
-                x = row;
-                y = col;
-            } else {
-                x = -1;
-                break;
+            if (board[row][col] == ' ') // empty cell
+                if (x == -1) { // first
+                    x = row;
+                    y = col;
+                } else { // second - no action
+                    x = -1;
+                    break;
+                } 
+            else { // occupied
+                if (occupant == '\0') occupant = board[row][col]; // first filled cell - assign
+                else if (occupant != board[row][col]) { // conflict - no action
+                    x = -1;
+                    break;
+                } // continue if cell matches
             }
         }
 
@@ -241,7 +249,10 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
     } else if (diagX != -1 && diagOccupant == 'O') blockX = diagX, blockY = diagY;
 
     // NO WINNING MOVES FOUND - check if blocking move was found
-    if (diagX != -1) board[blockX][blockY] = 'X';
+    if (blockX != -1) {
+        board[blockX][blockY] = 'X';
+        return;
+    }
 
     // NO WINNING OR BLOCKING MOVES FOUND - list all the possible places for the AI to move
     int available[99][2];
@@ -249,17 +260,18 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
     // check the entire board for possible places to play
     int availI = 0;
     for (int row = 0; row < size; row++) for (int col = 0; col < size; col++) {
-        if (board[row][col] == ' ') { // empty cell
+        if (board[row][col] == ' ') { // empty cell found
             available[availI][0] = row;
             available[availI][1] = col;
-            availI++;
+            availI++; // start filling next slot
         }
     }
 
     unsigned int seed = (unsigned int) time(NULL); srand(seed);
-    int randI = rand() % (availI + 1);
+    int randI = rand() % (availI + 1); // select a random index in the availability table that was previously filled
     
-    board[available[randI][0]][available[randI][1]] = 'X';
+    int randX = available[randI][0], randY = available[randI][1]; // retrieve coords and write cell
+    board[randX][randY] = 'X';
 }
 
 // returns 0 (no win), 1 (win for O), 2 (win for X)
