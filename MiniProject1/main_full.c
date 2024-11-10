@@ -268,7 +268,7 @@ void aiMove(char board[MAX_SIZE][MAX_SIZE], int size) {
     }
 
     unsigned int seed = (unsigned int) time(NULL); srand(seed);
-    int randI = rand() % (availI + 1); // select a random index in the availability table that was previously filled
+    int randI = rand() % availI; // select a random index in the availability table that was previously filled
     
     int randX = available[randI][0], randY = available[randI][1]; // retrieve coords and write cell
     board[randX][randY] = 'X';
@@ -381,7 +381,7 @@ void updateScore(char winner)
     static int x = 0;
     static int o = 0;
 
-    (winner == 'x') ? x++ : o++;
+    (winner == 'X') ? x++ : o++;
 
     printf("X score: %d\nO score: %d\n\n", x, o);
 }
