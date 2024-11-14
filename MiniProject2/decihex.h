@@ -7,7 +7,7 @@ int digitsDecihex(int num) {
     return digCount;
 }
 
-// fills hex[] with the hexidecimal characters in uppercase
+// fills string hex[] with the hexidecimal characters in uppercase
 void decihex(int num, char hex[]) {
     int digCount = 0;
     for (; num > 0; digCount++, num /= 16) {
@@ -17,4 +17,12 @@ void decihex(int num, char hex[]) {
     }
 
     hex[digCount] = '\0';
+}
+
+// converts string num[] to decimal
+void hexdeci(char num[], int *deci) {
+    for (int i = 0; i < sizeof(num); i++) {
+        if (num[i] == '\0') break;
+        *deci += (num[i] - 'A' < 0) ? (int)(num[i] - '0') : (int)(num[i] - 'A');
+    }
 }
