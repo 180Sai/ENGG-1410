@@ -30,18 +30,18 @@ int main(int argc, const char* argv[])
                     printf("TT");
                 else if (fileText[i]-16 < 32)
                 {
-                    char h[digiDecihex(fileText[i]-16-32+144)];
+                    char h[digitsDecihex(fileText[i]-16-32+144)];
                     h[0] = fileText[i]-16-32+144;
                     h[1] = '\0';
                     decihex(fileText[i]-16-32+144, h);
-                    printf("%s, %c, %d\n", h, fileText[i]-16-32+144, (fileText[i]-16-32+144));
+                    printf("%s, %c, %d, %c <- original | fileText[i]-16-32+144\n", h, fileText[i]-16-32+144, (fileText[i]-16-32+144), fileText[i]);
                 }
                 else{
-                    char h[digiDecihex(fileText[i]-16)];
+                    char h[digitsDecihex(fileText[i]-16)];
                     h[0] = fileText[i]-16;
                     h[1] = '\0';
-                    decihex(digiDecihex(fileText[i]-16), h);
-                    printf("%s, %c, %didk\n", h, fileText[i]-16, (fileText[i]-16-32+144));
+                    decihex(digitsDecihex(fileText[i]-16), h);
+                    printf("%s, %c, %d, %c <- original | fileText[i]-16\n", h, fileText[i]-16, (fileText[i]-16), fileText[i]);
                 }
             }
         }
