@@ -1,4 +1,6 @@
 #pragma once
+#include <math.h>
+#include <string.h>
 
 // returns the number of digits required to fit a decimal number in hexadecimal
 int digitsDecihex(int deci) {
@@ -7,22 +9,36 @@ int digitsDecihex(int deci) {
     return digCount;
 }
 
-// fills string hex[] with the hexidecimal characters in uppercase
-void decihex(int deci, char hex[]) {
+// fills string hex[] with the hexidecimal characters (uppercase) of unsigned decimal integer
+void decihex(int deci, char *hex) {
     int digCount = 0;
-    for (; deci > 0; digCount++, deci /= 16) {
+    do {
         int digit = deci % 16;
 
-        hex[digCount] = (digit < 10) ? ((char)digit + '0') : ((char)(digit - 10) + 'A');
-    }
+        char number = (char)digit + '0', letter = (char)digit - 10 + 'A';
+        hex[digCount] = (digit < 10) ? number : letter;
 
+        deci /= 16, digCount++;
+    } while (deci > 0);
+
+    // digits are currently in reverse order - convert to proper
+    char hextmp[digCount + 1];
+    strcpy(hextmp, hex);
+
+    for (int i = 0; i < digCount; i++) {
+        hex[i] = hextmp[digCount - 1 - i];
+    }
     hex[digCount] = '\0';
 }
 
 // converts string num[] to decimal
-void hexdeci(char hex[], int *deci) {
-    for (int i = 0; i < sizeof(hex); i++) {
-        if (hex[i] == '\0') break;
-        *deci += (hex[i] - 'A' < 0) ? (int)(hex[i] - '0') : (int)(hex[i] - 'A');
+void hexdeci(char *hex, int *deci, int hexlen) {
+    *deci = 0;
+
+    for (int i = hexlen - 1; i >= 0; i--) {
+        int number = hex[i] - '0', letter = hex[i] - 'A';
+        int digit = (letter < 0) ? number : letter + 10;
+
+        *deci += digit * (int)pow(16, hexlen - 1 - i);
     }
 }
