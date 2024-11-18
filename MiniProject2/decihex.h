@@ -2,12 +2,10 @@
 #include <math.h>
 #include <string.h>
 
-// returns the number of digits required to fit a decimal number in hexadecimal
-[[deprecated]] int digitsDecihex(int deci) {
-    int digCount = 0;
-    for (; deci > 0; deci /= 16) digCount++;
-    return digCount;
-}
+// macro for error handling (out of bounds)
+#ifdef DECIHEX_WARNING_ENABLE
+#include <stdio.h>
+#endif
 
 // length of string created by decihex
 int hlen(int deci) {
@@ -22,6 +20,12 @@ int hlen(int deci) {
 
 // fills string hex[] with hexidecimal characters (uppercase) of unsigned decimal integer
 void decihex(int deci, char *hex) {
+// macro for negative decimal number warning
+#ifdef DECIHEX_WARNING_ENABLE
+    if (deci < 0)
+        printf("\n\033[38;2;238;210;2m\twarning: decimal number is out of bounds\033[0m\n");
+#endif
+
     int digCount = 0;
     do {
         int digit = deci % 16;
@@ -45,6 +49,15 @@ void decihex(int deci, char *hex) {
 
 // converts string hex[] to decimal
 void hexdeci(char *hex, int *deci, int hexlen) {
+// macro for undefined hexadecimal character warning
+#ifdef DECIHEX_WARNING_ENABLE
+    for (int i = 0; i < hexlen; i++)
+        if (!(hex[i] >= '0' && hex[i] <= '9') && !(hex[i] >= 'A' && hex[i] <= 'F')) {
+            printf("\n\033[38;2;238;210;2m\twarning: hexadecimal number is out of bounds\033[0m\n");
+            break;
+        }
+#endif
+
     *deci = 0;
 
     for (int i = hexlen - 1; i >= 0; i--) {

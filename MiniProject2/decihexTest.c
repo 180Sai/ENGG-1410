@@ -3,7 +3,7 @@
 #include <string.h>
 
 // minimum, maximum range of tested unsigned decimal integers
-#define TEST_MIN 0
+#define TEST_MIN -200
 #define TEST_MAX 200
 
 // tests the functionality of decihex.h
