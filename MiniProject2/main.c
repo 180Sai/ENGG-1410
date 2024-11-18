@@ -22,26 +22,31 @@ int main(int argc, const char* argv[])
 
     while (fgets(fileText, sizeof(fileText), file_handle) != NULL) {
         if (isEncrypt){
+            printf("%s", fileText);
             for(int i = 0; i < sizeof(fileText); i++)
             {
-                if (fileText[i] == '\n')
-                    printf("\n------------");
+                if (fileText[i] <= 0)
+                    continue;
+                else if (fileText[i] == '\n')
+                    printf("\n");
                 else if (fileText[i] == '\t')
                     printf("TT");
                 else if (fileText[i]-16 < 32)
                 {
-                    char h[digitsDecihex(fileText[i]-16-32+144)];
+                    char h[hlen(fileText[i]-16-32+144)];
                     h[0] = fileText[i]-16-32+144;
                     h[1] = '\0';
                     decihex(fileText[i]-16-32+144, h);
-                    printf("%s, %c, %d, %c <- original | fileText[i]-16-32+144\n", h, fileText[i]-16-32+144, (fileText[i]-16-32+144), fileText[i]);
+                    // printf("%s", h);
+                    printf("original: %c, ascii: %d, ascii encrypt: %d, hex: %s\n", fileText[i], fileText[i], fileText[i]-16-32+144, h);
                 }
                 else{
-                    char h[digitsDecihex(fileText[i]-16)];
+                    char h[hlen(fileText[i]-16)];
                     h[0] = fileText[i]-16;
                     h[1] = '\0';
-                    decihex(digitsDecihex(fileText[i]-16), h);
-                    printf("%s, %c, %d, %c <- original | fileText[i]-16\n", h, fileText[i]-16, (fileText[i]-16), fileText[i]);
+                    decihex(fileText[i]-16, h);
+                    // printf("%s", h);
+                    printf("original: %c, ascii: %d, ascii encrypt: %d, hex: %s\n", fileText[i], fileText[i], fileText[i]-16, h);
                 }
             }
         }
@@ -51,5 +56,4 @@ int main(int argc, const char* argv[])
     }
 
     fclose(file_handle);
-    printf("%d, %c", 'A'-16, 'A'-16);
 }
