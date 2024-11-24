@@ -25,7 +25,7 @@ int main() {
             printf("%s", fileText);
             for (long long unsigned int i = 0; i < sizeof(fileText); i++) {
                 if (fileText[i] == '\0') break;
-
+                
                 if (fileText[i] <= 0)
                     continue;
                 else if (fileText[i] == '\n')
