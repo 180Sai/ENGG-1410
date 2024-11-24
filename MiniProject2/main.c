@@ -13,17 +13,17 @@
 #define LINE_MAX 125
 
 char *changExt(const char fileName[], char ext[]) {
-    char *tmp = malloc(256 * sizeof(char));
+    char tmp[256];
     strcpy(tmp, fileName);
     char *loc = strrchr(tmp, '.');
     if (loc)
         *(loc + 1) = '\0';
-    sprintf(tmp, "%s%s", tmp, ext);
-    return tmp;
+    char *end = malloc(256 * sizeof(char));
+    sprintf(end, "%s%s", tmp, ext);
+    return end;
 }
 
 int main(int argc, const char *argv[]) {
-    int file_index = 1;
     int isEncrypt = 1;
     char *fileName; // max file name length
 
@@ -33,23 +33,22 @@ int main(int argc, const char *argv[]) {
     if (argc > 2) {
         Read = fopen(argv[2], "r");
         if (!strcmp(argv[1], "-E")) {
-            printf("t1");
             fileName = changExt(argv[2], "crp");
         } else {
             isEncrypt = 0;
             fileName = changExt(argv[2], "txt");
         }
     } else {
-        printf("t3");
         Read = fopen(argv[1], "r");
         fileName = changExt(argv[1], "txt");
     }
     Write = fopen(fileName, "w+");
+    free(fileName);
 
     char fileText[LINE_MAX];
     while (fgets(fileText, sizeof(fileText), Read) != NULL) {
         if (isEncrypt) {
-            for (int i = 0; i < sizeof(fileText); i++) {
+            for (long long unsigned int i = 0; i < sizeof(fileText); i++) {
                 if (fileText[i] == '\0')
                     break;
                 else if (fileText[i] == '\n')
@@ -71,12 +70,11 @@ int main(int argc, const char *argv[]) {
                 }
             }
         } else {
-            for (int i = 0; i < sizeof(fileText); i += 2) {
-                if (fileText[i] == '\0')
-                    break;
-                else if (fileText[i] == '\n')
+            for (long long unsigned int i = 0; i < sizeof(fileText); i += 2) {
+                if (fileText[i] == '\n') {
                     fprintf(Write, "\n");
-                else if (fileText[i] == 'T' && fileText[i + 1] == 'T')
+                    break;
+                } else if (fileText[i] == 'T' && fileText[i + 1] == 'T')
                     fprintf(Write, "\t");
                 else {
                     int dec;
