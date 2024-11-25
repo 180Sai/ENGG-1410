@@ -3,13 +3,6 @@
 #include <string.h>
 
 #include "decihex.h"
-
-#define IS_DEBUG_TEXT 0
-
-// macros for reader's convenience
-#define HEX_OFFSET 16
-#define HEX_OV 32
-#define HEX_OV_OFFSET (16 + 32 - 144)
 #define LINE_MAX 125
 
 char *changExt(const char fileName[], char ext[]) {
@@ -55,17 +48,17 @@ int main(int argc, const char *argv[]) {
                     fprintf(Write, "\n");
                 else if (fileText[i] == '\t')
                     fprintf(Write, "TT");
-                else if (fileText[i] - HEX_OFFSET < HEX_OV) {
-                    char h[hlen(fileText[i] - HEX_OV_OFFSET)];
-                    h[0] = fileText[i] - HEX_OV_OFFSET;
+                else if (fileText[i] - 16 < 32) {
+                    char h[hlen(fileText[i] - 16 - 32 + 144)];
+                    h[0] = fileText[i] - 16 - 32 + 144;
                     h[1] = '\0';
-                    decihex(fileText[i] - HEX_OV_OFFSET, h);
+                    decihex(fileText[i] - 16 - 32 + 144, h);
                     fprintf(Write, "%s", h);
                 } else {
-                    char h[hlen(fileText[i] - HEX_OFFSET)];
-                    h[0] = fileText[i] - HEX_OFFSET;
+                    char h[hlen(fileText[i] - 16)];
+                    h[0] = fileText[i] - 16;
                     h[1] = '\0';
-                    decihex(fileText[i] - HEX_OFFSET, h);
+                    decihex(fileText[i] - 16, h);
                     fprintf(Write, "%s", h);
                 }
             }
